@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام دورة العمليات | RMZKSA STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --logo-blue: #3293ce;
+            --logo-gold: #c5a059;
+            --dark-bg: #0b0f16;
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--dark-bg);
+            overflow-x: hidden;
+            color: #f1f5f9;
+        }
+        .page-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .page-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-gradient {
+            background: linear-gradient(rgba(11, 15, 22, 0.85), rgba(11, 15, 22, 0.95)), 
+                        url('https://cdn.discordapp.com/attachments/1476046017534103784/1476081046851293256/unnamed.jpg?ex=699fd319&is=699e8199&hm=bfdd850ef3871d16ac35910c3f4676d930ad6d394e80a053bf93aab05ed5d2c2&');
+            background-size: cover;
+            background-position: center;
+        }
+        .card-glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(197, 160, 89, 0.1);
+        }
+        .gold-text {
+            background: linear-gradient(45deg, #c5a059, #e9c47a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-link.active {
+            color: var(--logo-gold);
+            border-bottom: 2px solid var(--logo-gold);
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--logo-gold);
+        }
+        .option-btn.selected {
+            background: rgba(197, 160, 89, 0.2);
+            border-color: var(--logo-gold);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
+        }
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        .rule-card {
+            padding: 1.25rem;
+            border-radius: 1rem;
+            background: rgba(0, 0, 0,
