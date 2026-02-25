@@ -4,147 +4,383 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام دورة العمليات | RMZKSA STORE</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --logo-blue: #3293ce;
             --logo-gold: #c5a059;
             --dark-bg: #0b0f16;
         }
-
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--dark-bg);
+            overflow-x: hidden;
             color: #f1f5f9;
-            margin: 0;
-            min-height: 100vh;
         }
-
-        /* تحسين الخلفية */
+        .page-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .page-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .hero-gradient {
-            background: linear-gradient(rgba(11, 15, 22, 0.9), rgba(11, 15, 22, 0.95)), 
-                        url('https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80');
+            background: linear-gradient(rgba(11, 15, 22, 0.85), rgba(11, 15, 22, 0.95)), 
+                        url('https://cdn.discordapp.com/attachments/1476046017534103784/1476081046851293256/unnamed.jpg?ex=699fd319&is=699e8199&hm=bfdd850ef3871d16ac35910c3f4676d930ad6d394e80a053bf93aab05ed5d2c2&');
             background-size: cover;
             background-position: center;
-            min-height: 100vh;
         }
-
         .card-glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(197, 160, 89, 0.2);
-            border-radius: 1.5rem;
-            transition: transform 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(197, 160, 89, 0.1);
         }
-
         .gold-text {
             background: linear-gradient(45deg, #c5a059, #e9c47a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-weight: 900;
         }
-
+        .nav-link.active {
+            color: var(--logo-gold);
+            border-bottom: 2px solid var(--logo-gold);
+        }
         .option-btn {
-            background: rgba(255, 255, 255, 0.05);
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-radius: 0.75rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--logo-gold);
+        }
+        .option-btn.selected {
+            background: rgba(197, 160, 89, 0.2);
+            border-color: var(--logo-gold);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
+        }
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.3s ease;
         }
-
-        .option-btn:hover {
-            border-color: var(--logo-gold);
-            background: rgba(197, 160, 89, 0.1);
-            transform: translateX(-5px);
+        .rule-card {
+            padding: 1.25rem;
+            border-radius: 1rem;
+            background: rgba(0, 0, 0, 0.4);
+            border-right: 4px solid #dc2626;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
         }
-
-        .status-badge {
-            background: rgba(50, 147, 206, 0.2);
-            color: var(--logo-blue);
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        input, select {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+            text-align: right;
+            font-size: 1.125rem;
+            outline: none;
+            color: white;
+        }
+        #quiz-timer {
+            font-family: 'Courier New', Courier, monospace;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #c5a059;
+            color: #c5a059;
+            font-weight: bold;
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
 
-    <div class="hero-gradient flex flex-col items-center py-10 px-4">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-slate-950/90 border-b border-[#c5a059]/20 backdrop-blur-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-4 cursor-pointer" onclick="showPage('hero')">
+                <img src="https://cdn.discordapp.com/attachments/1476046017534103784/1476266136512233543/Ministry_of_Interior_Saudi_Arabia.svg.png?ex=69a07f7a&is=699f2dfa&hm=aecb9a3714683d80b400d8f31ecd0db85e9a4e50849c77e8ab39f79b794222e9&" 
+                         alt="شعار الوزارة" class="h-10 md:h-12 w-auto">
+                <span class="font-black text-lg hidden md:inline">RMZKSA <span class="text-[#3293ce]">STORE</span></span>
+            </div>
+            <div class="flex space-x-reverse space-x-4 md:space-x-8 text-xs md:text-sm font-bold">
+                <button onclick="showPage('hero')" class="nav-link px-1 py-2 transition hover:text-[#c5a059]">الرئيسية</button>
+                <button onclick="showPage('about')" class="nav-link px-1 py-2 transition hover:text-[#c5a059]">التعريفات</button>
+                <button onclick="showPage('tasks')" class="nav-link px-1 py-2 transition hover:text-[#c5a059]">المهام</button>
+                <button onclick="showPage('rules')" class="nav-link px-1 py-2 transition hover:text-[#c5a059]">المحظورات</button>
+                <button onclick="showPage('quiz')" class="bg-[#c5a059] text-black px-4 py-2 rounded-lg hover:bg-white transition shadow-lg">الاختبار</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-20">
+        <!-- Hero Section -->
+        <section id="page-hero" class="page-content active hero-gradient h-[90vh] flex items-center">
+            <div class="container mx-auto px-6 text-center">
+                <div class="flex justify-center gap-6 mb-8">
+                    <img src="https://cdn.discordapp.com/attachments/1476046017534103784/1476266136512233543/Ministry_of_Interior_Saudi_Arabia.svg.png?ex=69a07f7a&is=699f2dfa&hm=aecb9a3714683d80b400d8f31ecd0db85e9a4e50849c77e8ab39f79b794222e9&" 
+                         class="h-28 md:h-40 w-auto drop-shadow-2xl">
+                    <img src="https://cdn.discordapp.com/attachments/1476046017534103784/1476081046851293256/unnamed.jpg?ex=699fd319&is=699e8199&hm=bfdd850ef3871d16ac35910c3f4676d930ad6d394e80a053bf93aab05ed5d2c2&" 
+                         class="h-28 md:h-40 w-28 md:w-40 rounded-full border-4 border-[#c5a059] shadow-2xl">
+                </div>
+                <h1 class="text-5xl md:text-7xl font-black mb-6 italic">دورة <span class="gold-text">العمليات والقيادة</span></h1>
+                <p class="text-xl text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed italic">مرحباً بك في النظام التعليمي المحدث لإدارة العمليات المركزية.</p>
+            </div>
+        </section>
+
+        <!-- التعريفات -->
+        <section id="page-about" class="page-content py-20">
+             <div class="container mx-auto px-6 max-w-6xl">
+                <h2 class="text-4xl font-black text-center mb-16 gold-text italic">الهيكل الإداري للعمليات</h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="card-glass p-10 rounded-[2.5rem] border-r-4 border-r-[#3293ce]">
+                        <i class="fas fa-tower-broadcast text-5xl text-[#3293ce] mb-6"></i>
+                        <h3 class="text-3xl font-bold mb-4">مسؤول العمليات (Dispatch)</h3>
+                        <p class="text-slate-300 text-lg leading-relaxed text-right">المسؤول الأول عن توجيه الوحدات، استلام البلاغات، وإدارة موجة الراديو الرسمية لضمان استقرار الميدان.</p>
+                    </div>
+                    <div class="card-glass p-10 rounded-[2.5rem] border-r-4 border-r-[#c5a059]">
+                        <i class="fas fa-shield-halved text-5xl text-[#c5a059] mb-6"></i>
+                        <h3 class="text-3xl font-bold mb-4">نائب العمليات (Deputy)</h3>
+                        <p class="text-slate-300 text-lg leading-relaxed text-right">المساعد الإداري المسؤول عن التقارير الساعية، التنسيق مع الخدمات الخارجية، ومراقبة الانضباط الميداني.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- المهام -->
+        <section id="page-tasks" class="page-content py-20">
+            <div class="container mx-auto px-6 max-w-6xl">
+                <h2 class="text-4xl font-black text-center mb-16 text-[#3293ce] italic text-right">قائمة المهام والمسؤوليات الميدانية</h2>
+                <div class="grid md:grid-cols-2 gap-10 text-right">
+                    <div class="space-y-4">
+                        <h4 class="text-[#c5a059] font-bold text-2xl mb-6">مهام مسؤول العمليات:</h4>
+                        <div class="task-item"><i class="fas fa-map-location-dot text-[#c5a059]"></i> <p>توزيع الوحدات على مواقعهم وأكوادهم الميدانية واستلام تسجيل دخولهم.</p></div>
+                        <div class="task-item"><i class="fas fa-bullhorn text-[#c5a059]"></i> <p>استلام البلاغات من الوحدات وتمريرها بشكل منظم وسريع.</p></div>
+                        <div class="task-item"><i class="fas fa-users-gear text-[#c5a059]"></i> <p>متابعة البلاغات وتنظيم الوحدات على بروتوكولات الراديو الرسمية.</p></div>
+                        <div class="task-item"><i class="fas fa-database text-[#c5a059]"></i> <p>التأكد من الوحدات الميدانية وطلب الشرطة العسكرية لإحضارهم بقاعدة البيانات.</p></div>
+                        <div class="task-item"><i class="fas fa-shield-halved text-[#c5a059]"></i> <p>تمرير أكواد المخالفين للشرطة العسكرية في حال تكرار التجاوزات.</p></div>
+                        <div class="task-item"><i class="fas fa-file-circle-check text-[#c5a059]"></i> <p>التأكد من توزيع الفرق قبل إنزال التقرير لتجنب المحاسبة.</p></div>
+                    </div>
+                    <div class="space-y-4">
+                        <h4 class="text-[#3293ce] font-bold text-2xl mb-6">مهام نائب العمليات:</h4>
+                        <div class="task-item"><i class="fas fa-clock text-[#3293ce]"></i> <p>تمرير تقرير العمليات المحدث بعد كل ساعة في الروم المخصص.</p></div>
+                        <div class="task-item"><i class="fas fa-pen-fancy text-[#3293ce]"></i> <p>كتابة جميع الوحدات وتنزيل التقرير كاملاً في روم تقارير العمليات نهاية الشفت.</p></div>
+                        <div class="task-item"><i class="fas fa-truck-medical text-[#3293ce]"></i> <p>الانتقال بين الموجات لطلب الميكانيكي أو الهلال الأحمر للوحدات.</p></div>
+                        <div class="task-item"><i class="fas fa-headset text-[#3293ce]"></i> <p>استلام البلاغات نيابة عن العمليات وتمريرها بشكل منظم عند الضغط.</p></div>
+                        <div class="task-item"><i class="fas fa-person-walking text-[#3293ce]"></i> <p>النزول للميدان مسموح فقط في حال كان عدد الوحدات 5 أو أقل.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- المحظورات -->
+        <section id="page-rules" class="page-content py-20">
+            <div class="container mx-auto px-6 max-w-5xl text-right">
+                <h2 class="text-4xl font-black text-center mb-16 text-red-500 italic">قائمة المحظورات الصارمة</h2>
+                <div class="grid gap-4">
+                    <div class="rule-card"><i class="fas fa-ban text-red-600 mt-1"></i><p>يمنع على العمليات الخروج للميدان مهما كان السبب ويجب البقاء في المركز المخصص.</p></div>
+                    <div class="rule-card"><i class="fas fa-award text-red-600 mt-1"></i><p>الأولوية لمن لديه دورة؛ يمنع استلام المهام بوجود شخص ميداني لديه دورة العمليات.</p></div>
+                    <div class="rule-card"><i class="fas fa-microphone-slash text-red-600 mt-1"></i><p>يمنع مقاطعة البلاغات؛ ويجب الالتزام التام ببروتوكولات العمليات الرسمية.</p></div>
+                    <div class="rule-card" style="border-right-color: #16a34a;"><i class="fas fa-circle-info text-green-500 mt-1"></i><p>مسموح للنائب ترك مركزه للميدان في النقص الشديد بشرط الرجوع فور طلب العمليات "غفوة".</p></div>
+                    <div class="rule-card"><i class="fas fa-rotate text-red-600 mt-1"></i><p>في حال تكرار الأخطاء، يتم سحب الدورة فوراً ويتم التقديم عليها مرة أخرى.</p></div>
+                    <div class="rule-card"><i class="fas fa-comment-slash text-red-600 mt-1"></i><p>يمنع الأسئلة العشوائية بالراديو؛ اطلب رتبة عليا بالميدان واشرح مشكلتك خاص.</p></div>
+                    <div class="rule-card"><i class="fas fa-user-xmark text-red-600 mt-1"></i><p>يمنع تصحيح الأخطاء عبر الراديو؛ انصح زميلك بطريقة لبقة خارج الموجة.</p></div>
+                    <div class="rule-card"><i class="fas fa-door-open text-red-600 mt-1"></i><p>يمنع الحديث أو "الدفن" في روم العمليات؛ غادر فور أخذ التوجيه بشكل مباشر.</p></div>
+                    <div class="rule-card"><i class="fas fa-pen-nib text-red-600 mt-1"></i><p>يمنع التعديل على التقرير الميداني بعد إنزاله نهائياً.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- الاختبار -->
+        <section id="page-quiz" class="page-content py-20">
+            <div class="container mx-auto px-6 max-w-2xl">
+                <div id="quiz-container" class="card-glass p-8 md:p-12 rounded-[2.5rem]">
+                    
+                    <div id="quiz-start" class="text-right">
+                        <h2 class="text-3xl font-black mb-8 gold-text text-center italic">نموذج التسجيل للاختبار المحدث</h2>
+                        <label class="block mb-2 font-bold">الاسم الكامل:</label>
+                        <input type="text" id="reg-name" placeholder="الاسم الثلاثي">
+                        <label class="block mb-2 font-bold">الكود العسكري:</label>
+                        <input type="text" id="reg-code" placeholder="مثال: A-101">
+                        <label class="block mb-2 font-bold">ID DISCORD:</label>
+                        <input type="text" id="reg-discord" placeholder="معرف الديسكورد">
+                        <label class="block mb-2 font-bold">الرتبة العسكرية:</label>
+                        <select id="reg-rank">
+                            <option value="">اختر الرتبة</option>
+                            <option value="جندي">جندي</option><option value="جندي أول">جندي أول</option><option value="عريف">عريف</option>
+                            <option value="وكيل رقيب">وكيل رقيب</option><option value="رقيب">رقيب</option><option value="رقيب أول">رقيب أول</option>
+                            <option value="رئيس رقباء">رئيس رقباء</option><option value="ملازم">ملازم</option><option value="ملازم أول">ملازم أول</option>
+                            <option value="نقيب">نقيب</option><option value="رائد">رائد</option><option value="مقدم">مقدم</option>
+                            <option value="عقيد">عقيد</option><option value="عميد">عميد</option><option value="لواء">لواء</option>
+                        </select>
+                        <div class="bg-blue-900/20 p-4 rounded-xl mb-4 border border-blue-500/30 text-center">
+                            <p class="text-blue-400 font-bold"><i class="fas fa-clock"></i> تنبيه: مدة الاختبار 15 دقيقة فقط</p>
+                        </div>
+                        <button onclick="startQuiz()" class="bg-[#c5a059] text-black w-full py-4 rounded-xl font-black text-xl hover:bg-white transition">بدء الاختبار</button>
+                    </div>
+
+                    <div id="quiz-play" class="hidden text-right">
+                        <div class="flex justify-between items-center mb-6">
+                            <div id="quiz-timer">15:00</div>
+                            <span id="quiz-progress" class="text-[#c5a059] font-bold">1 / 10</span>
+                        </div>
+                        <div class="h-2 w-full bg-white/5 rounded-full overflow-hidden mb-10">
+                            <div id="quiz-bar" class="h-full bg-[#3293ce] transition-all w-0"></div>
+                        </div>
+                        <h3 id="quiz-question" class="text-2xl font-bold mb-10"></h3>
+                        <div id="quiz-options"></div>
+                        <button id="quiz-next" onclick="nextQuestion()" class="hidden mt-8 w-full py-4 rounded-xl bg-[#c5a059] text-black font-black">السؤال التالي</button>
+                    </div>
+
+                    <div id="quiz-result" class="hidden text-center">
+                        <div id="res-icon" class="text-7xl mb-6"></div>
+                        <h2 id="res-title" class="text-4xl font-black mb-4 italic">النتيجة</h2>
+                        <div id="res-score" class="text-6xl font-black text-[#c5a059] mb-8">0%</div>
+                        <p id="time-taken-msg" class="text-slate-400 mb-6"></p>
+                        <button onclick="location.reload()" class="bg-white/10 px-8 py-3 rounded-xl">إعادة المحاولة</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-10 text-center text-slate-600 text-sm">
+        RMZKSA STORE &copy; 2024 | مرجع دورة العمليات المحدث
+    </footer>
+
+    <script>
+        const webhookURL = "https://discord.com/api/webhooks/1476261427886030941/ndhOhpdKCYqQsMzqrHv6vis0VLXidV1oHqisjZzQoTb-3MQjn4z3DF-HVSHYV-th_FuC";
         
-        <div class="text-center mb-12">
-            <h1 class="text-5xl mb-2 gold-text">RMZKSA STORE</h1>
-            <p class="text-gray-400 tracking-widest uppercase text-sm">Operations Cycle System</p>
-            <div class="h-1 w-24 bg-gradient-to-r from-transparent via-[#c5a059] to-transparent mx-auto mt-4"></div>
-        </div>
+        const questions = [
+            { q: "متى يحق لنائب العمليات النزول للميدان بشكل قانوني؟", options: ["في أي وقت", "عندما يكون عدد الوحدات 5 أو أقل", "يمنع عليه النزول نهائياً"], correct: 1 },
+            { q: "ما هو الإجراء الممنوع بعد إنزال تقرير العمليات في الروم المخصص؟", options: ["تغيير الرتبة", "التعديل على التقرير نهائياً", "مشاركته مع الوحدات"], correct: 1 },
+            { q: "ما هو شرط بقاء نائب العمليات في الميدان عند النقص الشديد؟", options: ["الحصول على ترقية", "الرجوع للمركز فور طلب العمليات 'غفوة'", "البقاء حتى نهاية الشفت"], correct: 1 },
+            { q: "كيف يتم تصحيح خطأ عسكري لاحظته في الراديو؟", options: ["تصحيحه فوراً في الراديو", "الذهاب للشخص ونصحه وتعليمه بطريقة لبقة خارج الراديو", "تجاهل الخطأ"], correct: 1 },
+            { q: "بوجود شخص لديه دورة عمليات في الميدان، هل يحق لشخص آخر لا يملكها استلام العمليات؟", options: ["نعم إذا كانت رتبته أعلى", "لا يحق له بوجود شخص لديه دورة عمليات", "نعم في الحالات الطارئة"], correct: 1 },
+            { q: "ماذا يجب أن تفعل فور أخذ توجيهك من غرفة العمليات؟", options: ["البقاء لسماع بقية البلاغات", "مغادرة الروم بشكل مباشر وفوري", "وضع ميوت والبقاء"], correct: 1 },
+            { q: "متى يتم تمرير تقرير العمليات المحدث من قبل النائب؟", options: ["نهاية اليوم", "بعد كل ساعة", "كل 10 دقائق"], correct: 1 },
+            { q: "من هو المسؤول عن طلب حضور الوحدات لقاعدة البيانات عبر الشرطة العسكرية؟", options: ["الوحدات الميدانية", "مسؤول العمليات (Dispatch)", "الميكانيكي"], correct: 1 },
+            { q: "ما هو الإجراء عند الرغبة في أخذ توجيه والتقرير لا يزال فعالاً؟", options: ["طلبه عبر الراديو", "الذهاب لغرفة العمليات لأخذ التوجيه", "إرساله في الشات"], correct: 1 },
+            { q: "عقوبة تكرار الأخطاء في مهام العمليات أو النائب هي:", options: ["إنذار شفهي", "سحب الدورة وإعادة التقديم مرة أخرى", "خصم مالي"], correct: 1 }
+        ];
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+        let currentQ = 0, score = 0, selectedIndex = null, userData = {};
+        let timeLeft = 15 * 60;
+        let timerInterval;
+        let isTimeUp = false;
+
+        function showPage(p) {
+            document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('page-'+p).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function startQuiz() {
+            userData = {
+                name: document.getElementById('reg-name').value,
+                code: document.getElementById('reg-code').value,
+                discord: document.getElementById('reg-discord').value,
+                rank: document.getElementById('reg-rank').value
+            };
+            if(!userData.name || !userData.code || !userData.rank) return alert("يرجى إكمال البيانات");
             
-            <div class="card-glass p-6">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="bg-blue-500/20 p-3 rounded-lg text-blue-400">
-                        <i class="fas fa-shopping-cart text-2xl"></i>
-                    </div>
-                    <span class="status-badge">نشط</span>
-                </div>
-                <h3 class="text-xl font-bold mb-4">إدارة الطلبات الجديدة</h3>
-                <button class="option-btn w-full text-right p-4 rounded-xl mb-3 flex justify-between items-center">
-                    <span>مراجعة الطلبات المعلقة</span>
-                    <i class="fas fa-chevron-left text-xs opacity-50"></i>
-                </button>
-                <button class="option-btn w-full text-right p-4 rounded-xl flex justify-between items-center">
-                    <span>تحديث حالة الدفع</span>
-                    <i class="fas fa-chevron-left text-xs opacity-50"></i>
-                </button>
-            </div>
+            document.getElementById('quiz-start').classList.add('hidden');
+            document.getElementById('quiz-play').classList.remove('hidden');
+            
+            startTimer();
+            loadQuestion();
+        }
 
-            <div class="card-glass p-6 border-gold-500/50">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="bg-amber-500/20 p-3 rounded-lg text-amber-400">
-                        <i class="fas fa-box-open text-2xl"></i>
-                    </div>
-                    <span class="status-badge" style="color: #c5a059; background: rgba(197, 160, 89, 0.2);">تحت المعالجة</span>
-                </div>
-                <h3 class="text-xl font-bold mb-4">دورة التنفيذ</h3>
-                <button class="option-btn w-full text-right p-4 rounded-xl mb-3 flex justify-between items-center">
-                    <span>تجهيز الشحنات</span>
-                    <i class="fas fa-chevron-left text-xs opacity-50"></i>
-                </button>
-                <button class="option-btn w-full text-right p-4 rounded-xl flex justify-between items-center">
-                    <span>إصدار البوليصات</span>
-                    <i class="fas fa-chevron-left text-xs opacity-50"></i>
-                </button>
-            </div>
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                let mins = Math.floor(timeLeft / 60);
+                let secs = timeLeft % 60;
+                document.getElementById('quiz-timer').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    isTimeUp = true;
+                    finish();
+                }
+            }, 1000);
+        }
 
-            <div class="card-glass p-6">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="bg-green-500/20 p-3 rounded-lg text-green-400">
-                        <i class="fas fa-chart-line text-2xl"></i>
-                    </div>
-                </div>
-                <h3 class="text-xl font-bold mb-4">التقارير والدعم</h3>
-                <div class="space-y-4">
-                    <div class="flex justify-between text-sm border-b border-white/5 pb-2">
-                        <span class="text-gray-400">معدل الإنجاز اليومي</span>
-                        <span class="text-green-400">94%</span>
-                    </div>
-                    <div class="flex justify-between text-sm border-b border-white/5 pb-2">
-                        <span class="text-gray-400">الطلبات المكتملة</span>
-                        <span>128 طلب</span>
-                    </div>
-                </div>
-                <button class="mt-6 w-full py-3 bg-[#c5a059] hover:bg-[#b08e4d] text-black font-bold rounded-xl transition-colors">
-                    عرض التقرير الكامل
-                </button>
-            </div>
+        function loadQuestion() {
+            selectedIndex = null;
+            const data = questions[currentQ];
+            document.getElementById('quiz-question').innerText = data.q;
+            document.getElementById('quiz-progress').innerText = `${currentQ + 1} / ${questions.length}`;
+            document.getElementById('quiz-bar').style.width = `${((currentQ+1)/questions.length)*100}%`;
+            const container = document.getElementById('quiz-options');
+            container.innerHTML = "";
+            data.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn";
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    selectedIndex = i;
+                    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    document.getElementById('quiz-next').classList.remove('hidden');
+                };
+                container.appendChild(btn);
+            });
+            document.getElementById('quiz-next').classList.add('hidden');
+        }
 
-        </div>
+        function nextQuestion() {
+            if(selectedIndex === questions[currentQ].correct) score++;
+            currentQ++;
+            if(currentQ < questions.length) loadQuestion(); else finish();
+        }
 
-        <footer class="mt-20 text-gray-500 text-sm">
-            &copy; 2024 RMZKSA STORE - جميع الحقوق محفوظة
-        </footer>
-    </div>
+        async function finish() {
+            clearInterval(timerInterval);
+            document.getElementById('quiz-play').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            
+            const percent = (score/questions.length)*100;
+            const passed = percent >= 70;
+            document.getElementById('res-score').innerText = percent + "%";
+            document.getElementById('res-icon').innerText = passed ? "✅" : "❌";
+            document.getElementById('res-title').innerText = passed ? "تم الاجتياز بنجاح" : "حاول مرة أخرى";
+            
+            if(isTimeUp) document.getElementById('time-taken-msg').innerText = "تنبيه: انتهى الوقت المخصص للاختبار.";
 
+            const embed = {
+                title: isTimeUp ? "⏱️ نتيجة اختبار العمليات (انتهى الوقت)" : "📊 نتيجة اختبار دورة العمليات المحدثة",
+                color: passed ? 3066993 : 15158332,
+                description: `👤 **الاسم:** ${userData.name}\n\n🎖️ **الكود:** ${userData.code}\n\n🛡️ **الرتبة:** ${userData.rank}\n\n📈 **النسبة:** ${percent}%\n\n📍 **الحالة:** ${passed ? "ناجح 🟢" : "راسب 🔴"}\n\n⌛ **ملاحظة:** تم تحديث المهام والمحظورات في هذا الاختبار.`,
+                timestamp: new Date()
+            };
+
+            await fetch(webhookURL, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ embeds: [embed] })
+            });
+        }
+    </script>
 </body>
 </html>
