@@ -4,86 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام دورة العمليات | RMZKSA STORE</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --logo-blue: #3293ce;
             --logo-gold: #c5a059;
             --dark-bg: #0b0f16;
         }
+
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--dark-bg);
-            overflow-x: hidden;
             color: #f1f5f9;
+            margin: 0;
+            min-height: 100vh;
         }
-        .page-content {
-            display: none;
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-        .page-content.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+
+        /* تحسين الخلفية */
         .hero-gradient {
-            background: linear-gradient(rgba(11, 15, 22, 0.85), rgba(11, 15, 22, 0.95)), 
-                        url('https://cdn.discordapp.com/attachments/1476046017534103784/1476081046851293256/unnamed.jpg?ex=699fd319&is=699e8199&hm=bfdd850ef3871d16ac35910c3f4676d930ad6d394e80a053bf93aab05ed5d2c2&');
+            background: linear-gradient(rgba(11, 15, 22, 0.9), rgba(11, 15, 22, 0.95)), 
+                        url('https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80');
             background-size: cover;
             background-position: center;
+            min-height: 100vh;
         }
+
         .card-glass {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(197, 160, 89, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            border-radius: 1.5rem;
+            transition: transform 0.3s ease;
         }
+
         .gold-text {
             background: linear-gradient(45deg, #c5a059, #e9c47a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            font-weight: 900;
         }
-        .nav-link.active {
-            color: var(--logo-gold);
-            border-bottom: 2px solid var(--logo-gold);
-        }
-        .option-btn {
-            display: block;
-            width: 100%;
-            text-align: right;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            border-radius: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
-        .option-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--logo-gold);
-        }
-        .option-btn.selected {
-            background: rgba(197, 160, 89, 0.2);
-            border-color: var(--logo-gold);
-            box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
-        }
-        .task-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            padding: 1rem;
-            background: rgba(15, 23, 42, 0.4);
-            border-radius: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-        .rule-card {
-            padding: 1.25rem;
-            border-radius: 1rem;
 
-            background: rgba(0, 0, 0,
+        .option-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover {
+            border-color: var(--logo-gold);
+            background: rgba(197, 160, 89, 0.1);
+            transform: translateX(-5px);
+        }
+
+        .status-badge {
+            background: rgba(50, 147, 206, 0.2);
+            color: var(--logo-blue);
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-gradient flex flex-col items-center py-10 px-4">
+        
+        <div class="text-center mb-12">
+            <h1 class="text-5xl mb-2 gold-text">RMZKSA STORE</h1>
+            <p class="text-gray-400 tracking-widest uppercase text-sm">Operations Cycle System</p>
+            <div class="h-1 w-24 bg-gradient-to-r from-transparent via-[#c5a059] to-transparent mx-auto mt-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+            
+            <div class="card-glass p-6">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="bg-blue-500/20 p-3 rounded-lg text-blue-400">
+                        <i class="fas fa-shopping-cart text-2xl"></i>
+                    </div>
+                    <span class="status-badge">نشط</span>
+                </div>
+                <h3 class="text-xl font-bold mb-4">إدارة الطلبات الجديدة</h3>
+                <button class="option-btn w-full text-right p-4 rounded-xl mb-3 flex justify-between items-center">
+                    <span>مراجعة الطلبات المعلقة</span>
+                    <i class="fas fa-chevron-left text-xs opacity-50"></i>
+                </button>
+                <button class="option-btn w-full text-right p-4 rounded-xl flex justify-between items-center">
+                    <span>تحديث حالة الدفع</span>
+                    <i class="fas fa-chevron-left text-xs opacity-50"></i>
+                </button>
+            </div>
+
+            <div class="card-glass p-6 border-gold-500/50">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="bg-amber-500/20 p-3 rounded-lg text-amber-400">
+                        <i class="fas fa-box-open text-2xl"></i>
+                    </div>
+                    <span class="status-badge" style="color: #c5a059; background: rgba(197, 160, 89, 0.2);">تحت المعالجة</span>
+                </div>
+                <h3 class="text-xl font-bold mb-4">دورة التنفيذ</h3>
+                <button class="option-btn w-full text-right p-4 rounded-xl mb-3 flex justify-between items-center">
+                    <span>تجهيز الشحنات</span>
+                    <i class="fas fa-chevron-left text-xs opacity-50"></i>
+                </button>
+                <button class="option-btn w-full text-right p-4 rounded-xl flex justify-between items-center">
+                    <span>إصدار البوليصات</span>
+                    <i class="fas fa-chevron-left text-xs opacity-50"></i>
+                </button>
+            </div>
+
+            <div class="card-glass p-6">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="bg-green-500/20 p-3 rounded-lg text-green-400">
+                        <i class="fas fa-chart-line text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold mb-4">التقارير والدعم</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between text-sm border-b border-white/5 pb-2">
+                        <span class="text-gray-400">معدل الإنجاز اليومي</span>
+                        <span class="text-green-400">94%</span>
+                    </div>
+                    <div class="flex justify-between text-sm border-b border-white/5 pb-2">
+                        <span class="text-gray-400">الطلبات المكتملة</span>
+                        <span>128 طلب</span>
+                    </div>
+                </div>
+                <button class="mt-6 w-full py-3 bg-[#c5a059] hover:bg-[#b08e4d] text-black font-bold rounded-xl transition-colors">
+                    عرض التقرير الكامل
+                </button>
+            </div>
+
+        </div>
+
+        <footer class="mt-20 text-gray-500 text-sm">
+            &copy; 2024 RMZKSA STORE - جميع الحقوق محفوظة
+        </footer>
+    </div>
+
+</body>
+</html>
